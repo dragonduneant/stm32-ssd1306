@@ -1,9 +1,22 @@
 #ifndef __SSD1306_TEST_H__
 #define __SSD1306_TEST_H__
 
+#if defined(__GNUC__)
 #include <_ansi.h>
+#elif defined(__IAR_SYSTEMS_ICC__)
+   
+#else
+#error "UNKNOWN COMPILER!"
+#endif
 
+#if defined(__GNUC__)
 _BEGIN_STD_C
+#elif defined(__IAR_SYSTEMS_ICC__)
+#define _BEGIN_STD_C
+#else
+#error "UNKNOWN COMPILER!"
+#endif
+
 
 void ssd1306_TestBorder(void);
 void ssd1306_TestFonts1(void);
@@ -19,6 +32,12 @@ void ssd1306_TestArc(void);
 void ssd1306_TestPolyline(void);
 void ssd1306_TestDrawBitmap(void);
 
+#if defined(__GNUC__)
 _END_STD_C
+#elif defined(__IAR_SYSTEMS_ICC__)
+#define _END_STD_C
+#else
+#error "UNKNOWN COMPILER!"
+#endif
 
 #endif // __SSD1306_TEST_H__
