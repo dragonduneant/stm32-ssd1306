@@ -19,13 +19,18 @@
 #error "UNKNOWN COMPILER!"
 #endif
 
+ 
 #if defined(__GNUC__)
 _BEGIN_STD_C
 #elif defined(__IAR_SYSTEMS_ICC__)
-#define _BEGIN_STD_C
+#ifdef __cplusplus
+extern "C" {
+#endif
 #else
 #error "UNKNOWN COMPILER!"
 #endif
+  
+
 
 #include "ssd1306_conf.h"
 
@@ -229,7 +234,9 @@ SSD1306_Error_t ssd1306_FillBuffer(uint8_t* buf, uint32_t len);
 #if defined(__GNUC__)
 _END_STD_C
 #elif defined(__IAR_SYSTEMS_ICC__)
-#define _END_STD_C
+#ifdef __cplusplus
+}
+#endif
 #else
 #error "UNKNOWN COMPILER!"
 #endif
