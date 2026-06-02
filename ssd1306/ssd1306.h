@@ -13,24 +13,17 @@
 
 #if defined(__GNUC__)
 #include <_ansi.h>
-#elif defined(__IAR_SYSTEMS_ICC__)
-   
-#else
-#error "UNKNOWN COMPILER!"
 #endif
 
- 
+#ifdef __cplusplus 
 #if defined(__GNUC__)
 _BEGIN_STD_C
 #elif defined(__IAR_SYSTEMS_ICC__)
-#ifdef __cplusplus
 extern "C" {
-#endif
 #else
 #error "UNKNOWN COMPILER!"
 #endif
-  
-
+#endif
 
 #include "ssd1306_conf.h"
 
@@ -231,14 +224,14 @@ void ssd1306_WriteCommand(uint8_t byte);
 void ssd1306_WriteData(uint8_t* buffer, size_t buff_size);
 SSD1306_Error_t ssd1306_FillBuffer(uint8_t* buf, uint32_t len);
 
+#ifdef __cplusplus
 #if defined(__GNUC__)
 _END_STD_C
 #elif defined(__IAR_SYSTEMS_ICC__)
-#ifdef __cplusplus
 }
-#endif
 #else
 #error "UNKNOWN COMPILER!"
+#endif
 #endif
 
 #endif // __SSD1306_H__

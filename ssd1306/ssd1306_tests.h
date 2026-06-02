@@ -5,14 +5,14 @@
 #include <_ansi.h>
 #endif
 
+#ifdef __cplusplus 
 #if defined(__GNUC__)
 _BEGIN_STD_C
 #elif defined(__IAR_SYSTEMS_ICC__)
-#ifdef __cplusplus
 extern "C" {
-#endif
 #else
 #error "UNKNOWN COMPILER!"
+#endif
 #endif
 
 
@@ -30,14 +30,14 @@ void ssd1306_TestArc(void);
 void ssd1306_TestPolyline(void);
 void ssd1306_TestDrawBitmap(void);
 
+#ifdef __cplusplus
 #if defined(__GNUC__)
 _END_STD_C
 #elif defined(__IAR_SYSTEMS_ICC__)
-#ifdef __cplusplus
 }
-#endif
 #else
 #error "UNKNOWN COMPILER!"
+#endif
 #endif
 
 #endif // __SSD1306_TEST_H__
