@@ -3,20 +3,42 @@
 #include <stdlib.h>
 #include <string.h>  // For memcpy
 
-#if defined(SSD1306_USE_I2C)
+extern void Error_Handler(void);
 
+#if defined(SSD1306_USE_I2C)
+volatile uint8_t ssd1306_I2C_Busy = 0;
+volatile uint32_t ssd1306_I2C_Delay = 0;
 void ssd1306_Reset(void) {
     /* for I2C - do nothing */
 }
 
 // Send a byte to the command register
 void ssd1306_WriteCommand(uint8_t byte) {
-    HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &byte, 1, HAL_MAX_DELAY);
+#ifdef I2C_DMA_ENABLED
+  while(ssd1306_I2C_Busy && (ssd1306_I2C_Delay != HAL_MAX_DELAY/10)){
+    ssd1306_I2C_Delay++;
+  }
+  ssd1306_I2C_Delay = 0;
+  ssd1306_I2C_Busy = 0;
+#endif
+  HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &byte, 1, HAL_MAX_DELAY);
 }
 
 // Send data
 void ssd1306_WriteData(uint8_t* buffer, size_t buff_size) {
-    HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x40, 1, buffer, buff_size, HAL_MAX_DELAY);
+#ifdef I2C_DMA_ENABLED
+    while(ssd1306_I2C_Busy && (ssd1306_I2C_Delay != HAL_MAX_DELAY/10)){
+    ssd1306_I2C_Delay++;
+  }
+  ssd1306_I2C_Delay = 0;
+  ssd1306_I2C_Busy = 1;
+  if (HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x40, 1, buffer, buff_size) != HAL_OK) {
+    ssd1306_I2C_Busy = 0;
+    Error_Handler();
+  }
+#else
+  HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x40, 1, buffer, buff_size, HAL_MAX_DELAY);
+#endif
 }
 
 #elif defined(SSD1306_USE_SPI)
